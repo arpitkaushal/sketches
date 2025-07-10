@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "include": [
+    "**/*.js"
+  ],
+  "compilerOptions": {
+    "moduleResolution": "node"
+  }
+}
