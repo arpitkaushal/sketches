@@ -1,61 +1,79 @@
 const color = {
-    "sky": "#AEB5C7",
-    "ocean": "#6894D1",
-    "island": "#FDD427",
-    "treebark": "#71573D",
-    "treeleaves": "#9CC756"
+    "sky": "#FEAA00",
+    "sun": "#FF8A02",
+    "sunglare": "#FEA202",
+    "dune1": "#954B00",
+    "dune1Shadow": "#63320C",
+    "dune2": "#966401",
+    "dune2Shadow": "#785032"
 }
 const bnw = {
-    "sky": "#c0c2caff",
-    "ocean": "#43464bff",
-    "island": "#a7a4a4ff",
-    "treebark": "#423324ff",
-    "treeleaves": "#9CC756"
+    "sky": "#d5d5d527",
+    "sun": "#a9a9a9ff",
+    "sunglare": "#b9b9b9ff",
+    "dune1": "#848483ff",
+    "dune1Shadow": "#6a6a69ff",
+    "dune2": "#9c9c9cff",
+    "dune2Shadow": "#8e8d8dff"
 }
 colorOptions = [color, bnw]
 colorIndex = 0;
 let chosenColor;
+let stars = []
 
 function setup() {
     createCanvas(400, 400);
+    frameRate(20);
 }
+
+let horizon = 600;
+let sunHeight = horizon;
+let redVal = 0, greenVal = 0, blackVal = 0;
 
 function draw() {
     chosenColor = colorOptions[colorIndex];
-    background(chosenColor.sky);
+    sunHeight = height - (frameCount % horizon);
 
-    fill(chosenColor.ocean);
-    horizon = height / 2
-    oceandepth = height / 2
-    noStroke()
-    rect(0, horizon, width, oceandepth);
-
-    fill(chosenColor.island)
-    noStroke()
-    islandbasemidpoint = width / 2;
-    islandheight = horizon - height / 10;
-    leftcoast = islandbasemidpoint - width / 10;
-    rightcoast = islandbasemidpoint + width / 10;
-    triangle(
-        leftcoast, horizon,
-        rightcoast, horizon,
-        islandbasemidpoint, islandheight
-    );
-
-    textSize(20)
-    text("🌴",
-        (leftcoast + 0.9 * islandbasemidpoint) / 2,
-        (horizon + 0.9 * islandheight) / 2,
-    )
-
-    mouseLocation();
+    if (colorIndex === 0) {
+        if (sunHeight < 100) {
+            redVal -= 4; greenVal--;
+        } else {
+            redVal += 4; greenVal++;
+        }
+        background(redVal, greenVal, 0);
+    } else {
+        if (sunHeight < 100) {
+            blackVal -= 1;
+        } else {
+            blackVal += 1;
+        }
+        background(blackVal)
+    }
 
 
-}
+    strokeWeight(10)
+    stroke(chosenColor.sunglare)
+    fill(chosenColor.sun)
+    circle(200, sunHeight, 100);
+    strokeWeight(0);
 
-function mouseLocation() {
-    fill(0)
-    text(`${int(mouseX)},${int(mouseY)}`, 20, 20);
+    fill(chosenColor.dune1)
+    triangle(130, 200, 0, 400, 400, 400);
+    fill(chosenColor.dune1Shadow)
+    triangle(130, 200, 0, 300, 0, 400);
+
+    fill(chosenColor.dune2)
+    triangle(300, 220, 100, 400, 700, 400);
+    fill(chosenColor.dune2Shadow)
+    triangle(300, 220, 100, 400, 180, 400);
+
+
+    // fill(0)
+    // text(`${int(mouseX)},${int(mouseY)}`, 20, 320);
+    // text(`${sunHeight}`, 20, 340);
+    // text(`${blackVal}`, 20, 360);
+
+
 }
 
 /**

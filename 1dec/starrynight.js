@@ -1,61 +1,95 @@
 const color = {
-    "sky": "#AEB5C7",
-    "ocean": "#6894D1",
-    "island": "#FDD427",
-    "treebark": "#71573D",
-    "treeleaves": "#9CC756"
+    "sky": "#435ea9ff",
+    "moon": "#b0d4e9ff",
+    "ground": "#023e6eff",
+    "mountain": "#7a4cd0ff",
+    "cloud": "#c3cafbff",
+    "shootingStars": "#d4bff8ff"
 }
 const bnw = {
-    "sky": "#c0c2caff",
-    "ocean": "#43464bff",
-    "island": "#a7a4a4ff",
-    "treebark": "#423324ff",
-    "treeleaves": "#9CC756"
+    "sky": "#c0c0c0ff",
+    "moon": "255",
+    "ground": "#9b9b9bff",
+    "mountain": "#585858ff",
+    "cloud": "#d0d1d3ff",
+    "shootingStars": "#e7e9f9ff"
 }
 colorOptions = [color, bnw]
 colorIndex = 0;
 let chosenColor;
+let stars = []
 
 function setup() {
     createCanvas(400, 400);
+    frameRate(60)
+    for (var i = 0; i < 500; i++) {
+		stars[i] = new Star();
+	}
 }
 
 function draw() {
     chosenColor = colorOptions[colorIndex];
+
     background(chosenColor.sky);
 
-    fill(chosenColor.ocean);
-    horizon = height / 2
-    oceandepth = height / 2
-    noStroke()
-    rect(0, horizon, width, oceandepth);
+    drawstars();
 
-    fill(chosenColor.island)
-    noStroke()
-    islandbasemidpoint = width / 2;
-    islandheight = horizon - height / 10;
-    leftcoast = islandbasemidpoint - width / 10;
-    rightcoast = islandbasemidpoint + width / 10;
-    triangle(
-        leftcoast, horizon,
-        rightcoast, horizon,
-        islandbasemidpoint, islandheight
-    );
+    strokeWeight(0)
+    fill(chosenColor.moon)
+    circle(350, 50, 50);
+    fill(chosenColor.sky)
+    circle(335, 50, 50);
+    
 
-    textSize(20)
-    text("🌴",
-        (leftcoast + 0.9 * islandbasemidpoint) / 2,
-        (horizon + 0.9 * islandheight) / 2,
-    )
+    strokeWeight(0);
+    fill(chosenColor.ground)
+    // first two args set location of upper left corner of the rectange
+    rect(0, 300, 400, 200)
 
-    mouseLocation();
+    fill(chosenColor.mountain)
+    triangle(60, 90, 220, 490, -70, 370);
+    triangle(190, 200, 270, 450, 100, 450);
 
+    // fill(250)
+    // text(`${int(mouseX)},${int(mouseY)}`, 20, 20);
+
+    fill(chosenColor.cloud)
+
+    cloudX = frameCount % (2*width);
+    ellipse(cloudX + 20, 50, 20, 10)
+    ellipse(cloudX - 40, 150, 50, 15)
+    ellipse(cloudX + 120, 20, 100, 10)
+
+    shootX = random(0, width);
+    shootY = random(0, height / 2);
+    stroke(chosenColor.shootingStars);
+    strokeWeight(1)
+    line(shootX, shootY, shootX + 30, shootY - 30);
 
 }
 
-function mouseLocation() {
-    fill(0)
-    text(`${int(mouseX)},${int(mouseY)}`, 20, 20);
+function drawstars(){
+    for (var i = 0; i < stars.length; i++) {
+		stars[i].draw();
+	}
+}
+
+
+// star class //
+class Star {
+	constructor() {
+		this.x = random(width);
+		this.y = random(height);
+		this.size = random(0.25, 3);
+		this.t = random(TAU);
+	}
+	
+	draw() {
+		this.t += 0.1;
+		var scale = this.size + sin(this.t) * 2;
+		noStroke();
+		ellipse(this.x, this.y, scale, scale);
+	}
 }
 
 /**
